@@ -18,11 +18,7 @@ const AddTodo: React.FC = () => {
     try {
       // If the request is successful, update the local state
 
-      const newTodoItem: Todo = {
-        
-        username: user,
-        todo: newTodo,
-      };
+
       // Make a POST request to your API endpoint using Axios
       console.log("here");
       console.log(newTodo)
@@ -30,13 +26,20 @@ const AddTodo: React.FC = () => {
       const jwtToken2 =  Cookies.get('jwtToken')
       const jwtToken = "Bearer "+ jwtToken2; 
       const res = await axios.post("/api/addTodo", {
-        id: todos.length + 1,
         todo: newTodo,
       },{
         headers: {
           Authorization: jwtToken,
         },
       });
+      console.log("this is id from server")
+      console.log(res.data.data);
+      
+      const newTodoItem: Todo = {
+        _id:res.data.data,
+        username: user,
+        todo: newTodo,
+      };
       setTodos([...todos,newTodoItem])
       console.log(res.data)
       setNewTodo("");
