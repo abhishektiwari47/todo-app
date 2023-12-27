@@ -35,9 +35,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const newTodo = new Todo({username:username, todo:todoItem });
 
       // Save the todo to the database
-      await newTodo.save();
+      const response = await newTodo.save();
+      console.log("this is from save")
+      console.log(response)
 
-      return res.status(201).json({ success: true, message: 'Todo added successfully', });
+      return res.status(201).json({ success: true, message: 'Todo added successfully',data:response._id});
     } else {
       return res.status(405).json({ success: false, message: 'Method Not Allowed' });
     }
