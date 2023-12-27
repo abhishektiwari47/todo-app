@@ -39,7 +39,7 @@ const Signup = () => {
         </label>
         <br />
         <button type="button" onClick={handleSignup}>
-          Login
+          SignUp
         </button>
       </form>
     </div>
