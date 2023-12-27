@@ -1,11 +1,30 @@
 import { Todo } from '@/db/model';
+import middleware from '@/utils/middleware';
 import { log } from 'console';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    
+    let username = '';
+  const jwtToken = req.headers.authorization;
+  console.log("this is from jwtToken");
+  console.log(jwtToken);
+  if (jwtToken) {
+    const decodedUser = await middleware(jwtToken);
+    console.log("this is decoded");
+  
+    if (typeof decodedUser === 'string') {
+      console.error('Unexpected string format for decoded user');
+    } else if (decodedUser && decodedUser.username) {
+      username = decodedUser.username;
+      console.log(`Username: ${username}`);
+    } else {
+      console.error('Username not found in decoded user object');
+    }
+  } else {
+    console.error('JWT token not found');
+  }
     if (req.method === 'POST') {
       // Parse the incoming JSON data from the request body
       console.log("we are in server")
@@ -13,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
        const idNumber:number = id;
        const todoItem:string = todo;
       // Create a new todo document
-      const newTodo = new Todo({id:idNumber, todo:todoItem });
+      const newTodo = new Todo({username:username, todo:todoItem });
 
       // Save the todo to the database
       await newTodo.save();

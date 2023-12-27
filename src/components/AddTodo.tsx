@@ -1,13 +1,14 @@
 // components/AddTodo.tsx
-import { todosState, Todo } from "@/store/atoms";
+import { todosState, Todo, userState } from "@/store/atoms";
 import React, { useState } from "react";
 import { useRecoilState } from "recoil";
+import Cookies from 'js-cookie';
 import axios from "axios"; // Import Axios
 
 const AddTodo: React.FC = () => {
   const [newTodo, setNewTodo] = useState<string>("");
   const [todos, setTodos] = useRecoilState(todosState);
-
+  const [user,setUser] = useRecoilState(userState); 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewTodo(e.target.value);
   };
@@ -18,17 +19,23 @@ const AddTodo: React.FC = () => {
       // If the request is successful, update the local state
 
       const newTodoItem: Todo = {
-        id: todos.length + 1,
+        
+        username: user,
         todo: newTodo,
       };
       // Make a POST request to your API endpoint using Axios
       console.log("here");
       console.log(newTodo)
       console.log(todos.length)
-      
+      const jwtToken2 =  Cookies.get('jwtToken')
+      const jwtToken = "Bearer "+ jwtToken2; 
       const res = await axios.post("/api/addTodo", {
         id: todos.length + 1,
         todo: newTodo,
+      },{
+        headers: {
+          Authorization: jwtToken,
+        },
       });
       setTodos([...todos,newTodoItem])
       console.log(res.data)
@@ -42,7 +49,7 @@ const AddTodo: React.FC = () => {
 
   return (
     <div>
-      <h2>Add Todo</h2>
+      <h2>Hi, {user} Add A New Todo...</h2>
       <input type="text" value={newTodo} onChange={handleInputChange} />
       <button onClick={handleAddTodo}>Add</button>
     </div>

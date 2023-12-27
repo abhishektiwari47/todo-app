@@ -1,9 +1,11 @@
 // components/TodoList.tsx
 import { connectToDatabase } from '@/db/connectDb';
 import { todosState } from '@/store/atoms';
+import middleware from '@/utils/middleware';
 import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import Cookies from 'js-cookie';
 
 interface Todo {
   id: number;
@@ -16,7 +18,16 @@ const TodoList: React.FC = () => {
   useEffect(() => {
     async function getTodo() {
       try {
-        const response = await axios.get("/api/getTodo");
+        const jwtToken2 =  Cookies.get('jwtToken')
+        const jwtToken = "Bearer "+ jwtToken2; 
+        console.log(jwtToken)
+       
+
+        const response = await axios.get("/api/getTodo",{
+          headers: {
+            Authorization: jwtToken,
+          },
+        });
         console.log("this is todo");
         console.log(response.data.todoList); // Assuming the property is 'todoList'
         setTodo(response.data.todoList);
@@ -36,7 +47,7 @@ const TodoList: React.FC = () => {
       <h2>Todo List</h2>
       <ul>
         {todos.map((todo) => (
-          <li key={todo.id}>{todo.todo}</li>
+          <li key={Math.random()}>{todo.todo}</li>
         ))}
       </ul>
       <br/>
