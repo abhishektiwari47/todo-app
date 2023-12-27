@@ -3,10 +3,11 @@ import mongoose from 'mongoose';
 import { atom } from 'recoil';
 
 export interface Todo {
-  // id:mongoose.Types.ObjectId;
+  _id?:string,
   username: string;
   todo: string;
 }
+
 
 
 export const todosState = atom<Todo[]>({
