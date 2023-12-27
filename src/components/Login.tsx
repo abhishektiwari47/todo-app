@@ -25,7 +25,7 @@ const Login = () => {
       Cookies.set('jwtToken', jwtToken, { expires: 7 }); // Set the expiration date as needed
 
       // Redirect the user to the home page or another authenticated page
-      router.push('/');
+      router.replace('/');
 
     } catch (error) {
       console.error('Error logging in:', error);
